@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'report_builder',
     'django_celery_beat',
-    'report_builder_scheduled'
+    'report_builder_scheduled',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
