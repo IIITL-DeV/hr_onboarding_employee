@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import report_builder.urls
+from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls'))  
+    path('', include('accounts.urls')),
+    re_path(r'^report_builder/', include(report_builder.urls)),
 ]
