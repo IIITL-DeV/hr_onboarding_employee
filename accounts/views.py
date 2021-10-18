@@ -13,18 +13,20 @@ from django.forms import Textarea
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 
+from django.contrib.auth.mixins import AccessMixin
 from django.contrib.auth.models import Group
 from .decorators import unauthenticated_user, allowed_users
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from braces.views import GroupRequiredMixin
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.template.loader import get_template
 import accounts
 
 # Create your views here.
-@unauthenticated_user
+
 def home(request):
     return render(request, 'accounts/home.html')
 
@@ -32,6 +34,13 @@ def home(request):
 def form_submitted(request):
     return render(request, 'accounts/form_submitted.html')
 
+@login_required(login_url='login')
+def nodetail(request):
+    return render(request, 'accounts/nodetail.html')
+
+@login_required(login_url='login')
+def nodetail2(request):
+    return render(request, 'accounts/nodetail2.html')
 
 @unauthenticated_user
 def registerPage(request):
@@ -44,7 +53,6 @@ def registerPage(request):
             username = form.cleaned_data.get('username')
             group = Group.objects.get(name = 'employee')
             user.groups.add(group)
-            messages.success(request, 'Account was created for '+ username)
             return redirect('login')
 
     context = {'form':form}
@@ -66,13 +74,20 @@ def loginPage(request):
                     return redirect('form_submitted')
                 else:
                     return redirect('upload')
+            elif request.user.groups.filter(name = 'admin1').exists():
+                return redirect('admin1')
+            elif request.user.groups.filter(name = 'admin2').exists():
+                return redirect('admin2')
+            elif request.user.groups.filter(name = 'director').exists():
+                return redirect('director')
             else:
                 return HttpResponse('Sorry')
 
-        else:
-            messages.info(request, 'Username OR password is incorrect')
     context = {}
-    return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/register.html', context)
+
+
+    
 
 def logoutUser(request):
     logout(request)
@@ -85,7 +100,7 @@ class upload(CreateView):
     success_url = reverse_lazy('home')
 
 """
-#@allowed_users(allowed_roles=['employee'])
+@allowed_users(allowed_roles=['employee'])
 def upload(request):
     model = new
     form = newForm()
@@ -109,7 +124,7 @@ def upload(request):
                     m = m+ i + ' '+ ':' + ' '+ body[i] + '\n'
 
                 m = m+ "For more details please visit the website."
-                send_mail(subject, m, '', [''], fail_silently=False)
+                send_mail(subject, m, '', ['accept1iiitl@gmail.com'], fail_silently=False)
                 form.save()
                 new.status1 = None
                 new.status2 = None
@@ -119,14 +134,17 @@ def upload(request):
     context = {'form':form}
     return render(request, 'accounts/new_form.html', context)
 
+@allowed_users(allowed_roles=['employee'])
 def info(request):
     model = new
     return render(request, 'accounts/info.html')
 
+@allowed_users(allowed_roles=['employee'])
 def status(request):
     model = new
     return render(request, 'accounts/status.html')
 
+@allowed_users(allowed_roles=['employee'])
 def update(request, pk):
     gh = new.objects.get(id=pk)
     form = update1()
@@ -146,7 +164,7 @@ def update(request, pk):
         gh.comment1 = None
         gh.comment2 = None
         gh.comment3 = None
-        send_mail('[Important] Document Update', msg, '', [''], fail_silently=False)
+        send_mail('[Important] Document Update', msg, '', ['accept1iiitl@gmail.com'], fail_silently=False)
         messages.success(request, 'You data has been updated succesfully.')
         form.save()
         return redirect('form_submitted')
@@ -158,51 +176,118 @@ class update(LoginRequiredMixin, UpdateView):
     fields = ["fname", "address","lname", "email", "dob", "gender", "aadharn", "rnumber", "pann","high","senior", "aadhar","pan","graduation","masters","phd" ,"college","mobile"]
     success_url = reverse_lazy('home')
 """
-      
-class approve_1(LoginRequiredMixin, ListView):
+
+     
+class approve_1(AccessMixin, ListView):
+    
     template_name = 'accounts/approve_1.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin1").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
 
-class history1(LoginRequiredMixin, ListView):
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+class history1(AccessMixin, ListView):
     template_name = 'accounts/history.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin1").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
+
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
     
 
-class admin2(LoginRequiredMixin, ListView):
+class admin2(AccessMixin, ListView):
     template_name = 'accounts/admin2dash.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin2").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
 
-class history2(LoginRequiredMixin, ListView):
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+class history2(AccessMixin, ListView):
     template_name = 'accounts/history2.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin2").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
 
-class director(LoginRequiredMixin, ListView):
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+class director(AccessMixin, ListView):
     template_name = 'accounts/directordash.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="director").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
 
-class history3(LoginRequiredMixin, ListView):
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+class history3(AccessMixin, ListView):
     template_name = 'accounts/history3.html'
     context_object_name = 'news'
     model = new
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="director").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
 
-class details(UpdateView, DetailView):
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+class details(AccessMixin, UpdateView, DetailView):
     template_name = 'accounts/new.html'
     context_object_name = 'new'
     model = new
@@ -214,15 +299,40 @@ class details(UpdateView, DetailView):
         hi = self.get_object()
         hi.status2 = None
         hi.status3 = None
+        body = {
+                    'Name': hi.fname+" "+hi.lname,                
+                    'E-mail': hi.email,
+                    'Phone number': hi.mobile,
+                    'Registration Number': hi.rnumber,
+                
+                }
         if hi.status1 == True:
-            msg = hi.fname + " " + hi.lname + ", your request has been approved by admin1 for further process."
-            send_mail('[Important] Approved by Admin1', msg, '', [hi.email], fail_silently=False)
+            msg2 = "Hello\n\nA new applicant has been approved by Admin1."
+            for i in body:
+                    msg2 = msg2+ i + ' '+ ':' + ' '+ body[i] + '\n'
+            msg2 = msg2+ "For more details please visit the website."
+            msg1 = hi.fname + " " + hi.lname + ", your request has been approved by admin1 for further process."
+            send_mail('[Important] Approved by Admin1', msg1, '', [hi.email], fail_silently=False)
+            send_mail('[Important]'+ hi.fname+" "+hi.lname+'has been approved by Admin1', msg2, '', ['accept2iiitl@gmail.com'], fail_silently=False)
         else:
             msg = "Reason given by Admin1 for declining your request\n"+ hi.comment1
             send_mail('[Important] Declined by Admin1', msg, '', [hi.email], fail_silently=False)
         return redirect('admin1')
 
-class details2(UpdateView, DetailView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin1").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
+
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+
+class details2(AccessMixin, UpdateView, DetailView):
     template_name = 'accounts/new2.html'
     context_object_name = 'new'
     model = new
@@ -233,15 +343,41 @@ class details2(UpdateView, DetailView):
         form.save()
         hi = self.get_object()
         hi.status3 = None
+        body = {
+                    'Name': hi.fname+" "+hi.lname,                
+                    'E-mail': hi.email,
+                    'Phone number': hi.mobile,
+                    'Registration Number': hi.rnumber,
+                
+                }
         if hi.status2 == True:
+            msg2 = "Hello\n\nA new applicant has been approved by Admin2."
+            for i in body:
+                    msg2 = msg2+ i + ' '+ ':' + ' '+ body[i] + '\n'
+            msg2 = msg2+ "For more details please visit the website."
             msg = hi.fname + " " + hi.lname + " , your request has been approved by admin2 for further process."
+            send_mail('[Important]'+ hi.fname+" "+hi.lname+'has been approved by Admin2', msg2, '', ['accept3iiitl@gmail.com'], fail_silently=False)
             send_mail('[Important] Approved by Admin2', msg, '', [hi.email], fail_silently=False)
         else:
-            msg = "Reason given by Admin1 for declining your request\n"+hi.comment2
+            msg = "Reason given by Admin2 for declining your request\n"+hi.comment2
             send_mail('[Imortant] Declined by Admin2', msg, '', [hi.email], fail_silently=False)
         return redirect('admin2')
 
-class details3(UpdateView, DetailView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="admin2").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
+
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
+
+
+
+class details3(AccessMixin, UpdateView, DetailView):
+    group_required = u"director"
     template_name = 'accounts/new3.html'
     context_object_name = 'new'
     model = new
@@ -256,11 +392,22 @@ class details3(UpdateView, DetailView):
             send_mail('[Important] Approved by Director', msg1, '', [hi.email], fail_silently=False)
             msg2 = hi.fname + " " + hi.lname + " has been approved by Director. \nPlease contact this person as soon as possible for further proceedings.\n"
             msg2 = msg2 + "Name: " + hi.fname+ " " + hi.lname + "\nEmail: " + hi.email + "\nMobile: " + hi.mobile
-            send_mail('[Important] New person has been approved by Director', msg2, '', [], fail_silently=False) 
+            send_mail('[Important] New person has been approved by Director', msg2, '', [''], fail_silently=False) 
         if hi.status3 == False:
-            msg = "Reason given by Admin1 for declining your request\n"+ hi.comment3
+            msg = "Reason given by Director for declining your request\n"+ hi.comment3
             send_mail('[Important] Declined by Director', msg, '', [hi.email], fail_silently=False)
         return redirect('director')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # This will redirect to the login view
+            return self.handle_no_permission()
+        if not self.request.user.groups.filter(name="director").exists():
+            # Redirect the user to somewhere else - add your URL here
+            return HttpResponse("You are not authorized to view this page")
+
+        # Checks pass, let http method handlers process the request
+        return super().dispatch(request, *args, **kwargs)
         
 
 

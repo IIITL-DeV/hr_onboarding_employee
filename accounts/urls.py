@@ -12,6 +12,8 @@ urlpatterns = [
     path('', views.home, name = 'home'),
     #path('upload/', upload.as_view()),
     path('upload/', views.upload, name = "upload"),
+    path('nodetail/', views.nodetail, name = "nodetail"),
+    path('nodetail2/', views.nodetail2, name = "nodetail2"),
     path('form_submitted', views.form_submitted, name = "form_submitted"),
     path('approve_1/', approve_1.as_view(), name = "admin1"),
     path('history1/', history1.as_view(), name = "history1"),

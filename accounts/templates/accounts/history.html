@@ -52,7 +52,12 @@
                 <span class="links_name">History</span>
             </a>
         </li>
-        
+        <li>
+            <a href="{% url 'home'%}">
+                <i class='bx bx-home' ></i>
+                <span class="links_name">Home</span>
+            </a>
+        </li>
         <li class="log_out">
             <a href="{% url 'logout'%}">
                 <i class='bx bx-log-out'></i>
@@ -92,7 +97,7 @@
                     <div class="col col-1" data-label="Registration Id">{{new.rnumber}}</div>
                     <div class="col col-2" data-label="Employee Name">{{new.fname}} {{new.lname}}</div>
                     <div class="col col-3" data-label="Profile">View</div>
-                    <div class="col col-3" data-label="Status"><i class='bx bx-check' ></i></div>
+                    <div class="col col-3" data-label="Status">Accepted</i></div>
                   </li>
                   {% endif %}
                 {% if new.status1 == False %}
@@ -100,7 +105,7 @@
                     <div class="col col-1" data-label="Registration Id">{{new.rnumber}}</div>
                     <div class="col col-2" data-label="Employee Name">{{new.fname}} {{new.lname}}</div>
                     <div class="col col-3" data-label="Profile">View</div>
-                    <div class="col col-3" data-label="Status"><i class='bx bx-x' ></i></div>
+                    <div class="col col-3" data-label="Status">Declined</i></div>
                   </li>
                   {% endif %}
                 {% endfor %}

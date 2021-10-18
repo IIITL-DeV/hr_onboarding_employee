@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +40,11 @@
                         <a href="#about" class="nav-link smoothScroll">What do we do?</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'login'%}" class="nav-link contact">Login/Sign Up</a>
+                        {% if user.is_authenticated%}
+                        <a href="{% url 'logout'%}" class="nav-link contact">Logut</a>
+                        {% else %}
+                        <a href="{% url 'register'%}" class="nav-link contact">Login/Sign Up</a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -55,10 +60,29 @@
 
                                    <h1 class="text-white" data-aos="fade-up">We provide an easy way to on-board your employees</h1>
 
-                                   <a href="{% url 'login'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
-
-
+                                  
+                                   {% if user.is_authenticated%} 
+                                        {% if request.user|has_group:"employee" %} 
+                                            {% if request.user.new %}
+                                                <a href="{% url 'form_submitted'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                            {% else %}
+                                                <a href="{% url 'upload'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if request.user|has_group:"admin1" %}
+                                            <a href="{% url 'approve_1'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                        {% endif %}
+                                        {% if request.user|has_group:"admin2" %}
+                                            <a href="{% url 'admin2'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                        {% endif %}
+                                        {% if request.user|has_group:"director" %}
+                                            <a href="{% url 'director'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                        {% endif %}
+                                    {% else %}
+                                         <a href="{% url 'register'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                    {% endif %}
                               </div>
+
                         </div>
 
                         <div class="col-lg-6 col-12">

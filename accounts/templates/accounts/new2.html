@@ -59,7 +59,12 @@
                 <span class="links_name">History</span>
             </a>
         </li>
-        
+        <li>
+            <a href="{% url 'home'%}">
+                <i class='bx bx-home' ></i>
+                <span class="links_name">Home</span>
+            </a>
+        </li>
         <li class="log_out">
             <a href="{% url 'logout'%}">
                 <i class='bx bx-log-out'></i>
@@ -87,7 +92,7 @@
 
 
 
-                        <table class="styled-table">
+                        <table class="styled-table" style = "overflow-x:auto;">
                             <tr>
                                 <td>Full Name</td>
                                 <td>{{new.fname}} {{new.lname}}</td>
@@ -172,9 +177,9 @@
 
 
 
-            <form method ="POST" action="" id="contact-form">
+            <form method ="POST" action="" id="contact-form" autocomplete="off">
             {% csrf_token %}
-                <label>Please type in your comments</label>
+                <label>If you are declining the request Please type in your reason</label>
                 {{form.comment2}}
 
                 <label> Please select the option that you want to move forward with.</label>

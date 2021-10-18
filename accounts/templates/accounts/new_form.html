@@ -44,33 +44,27 @@
     </div>
     <ul class="nav-links">
         <li>
-            <a href="{% url 'form_submitted'%}" class="active">
+            <a href="{% url 'upload'%}" class="active">
                 <i class='bx bx-grid-alt' ></i>
                 <span class="links_name">Dashboard</span>
             </a>
         </li>
         <li>
-            <a href="{% url 'info'%}">
+            <a href="{% url 'nodetail'%}">
                 <i class='bx bx-id-card' ></i>
                 <span class="links_name">Validating Details</span>
             </a>
         </li>
         <li>
-            <a href="{% url 'status'%}">
+            <a href="{% url 'nodetail'%}">
                 <i class='bx bx-list-ul' ></i>
                 <span class="links_name">Updates</span>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <i class='bx bx-user-pin' ></i>
-                <span class="links_name">Team</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <i class='bx bx-message' ></i>
-                <span class="links_name">Messages</span>
+       <li>
+            <a href="{% url 'home'%}">
+                <i class='bx bx-home' ></i>
+                <span class="links_name">Home</span>
             </a>
         </li>
         <li class="log_out">
@@ -102,7 +96,7 @@
         <div class="r-s box">
             <div class="title">Upload Documents</div>
             <div class="s-d">
-                <form method ="POST" action="" id="contact-form", enctype="multipart/form-data">
+                <form method ="POST" action="" id="contact-form", enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                     <input type="hidden" name="contact_number">
                     <label>First Name</label>
