@@ -30,12 +30,13 @@ class DateInput(forms.DateInput):
 class newForm(ModelForm):
     class Meta:
         model = new
-        fields = ["fname", "address","lname", "email", "dob", "gender", "aadharn", "rnumber", "pann","high","senior", "aadhar","pan","graduation","masters","phd" ,"college","mobile"]
+        fields = ["fname", "address","lname", "email", "dob", "gender1", "aadharn", "rnumber", "pann","high","senior", "aadhar","pan","graduation","masters","phd" ,"college","mobile"]
     
         widgets = {
             "fname": TextInput(attrs={"placeholder": "First name",}),
             "lname": TextInput(attrs={"placeholder": "Last name",}),
             #"dob": TextInput(attrs={"placeholder": "mm/dd/yyyy",}),
+            'gender': forms.Select(attrs={'class': 'custom-select md-form'}),
             'dob': DateInput(),
         }
 
