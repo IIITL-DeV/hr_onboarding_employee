@@ -82,6 +82,10 @@ def loginPage(request):
                 return redirect('director')
             else:
                 return HttpResponse('Sorry')
+        else:
+            messages.error(request, "Username, password or email is incorrect.")
+            return redirect('register')
+
 
     context = {}
     return render(request, 'accounts/register.html', context)
@@ -123,7 +127,7 @@ def upload(request):
                 for i in body:
                     m = m+ i + ' '+ ':' + ' '+ body[i] + '\n'
 
-                m = m+ "For more details please visit the website."
+                m = m+ "For more details please visit the website https://hr-onboarding-cli.herokuapp.com/"
                 send_mail(subject, m, '', ['accept1iiitl@gmail.com'], fail_silently=False)
                 form.save()
                 new.status1 = None
@@ -310,12 +314,12 @@ class details(AccessMixin, UpdateView, DetailView):
             msg2 = "Hello\n\nA new applicant has been approved by Admin1."
             for i in body:
                     msg2 = msg2+ i + ' '+ ':' + ' '+ body[i] + '\n'
-            msg2 = msg2+ "For more details please visit the website."
+            msg2 = msg2+ "For more details please visit the website https://hr-onboarding-cli.herokuapp.com/"
             msg1 = hi.fname + " " + hi.lname + ", your request has been approved by admin1 for further process."
             send_mail('[Important] Approved by Admin1', msg1, '', [hi.email], fail_silently=False)
             send_mail('[Important]'+ hi.fname+" "+hi.lname+'has been approved by Admin1', msg2, '', ['accept2iiitl@gmail.com'], fail_silently=False)
         else:
-            msg = "Reason given by Admin1 for declining your request\n"+ hi.comment1
+            msg = "Reason given by Admin1 for declining your request\n"+ hi.comment1 + "\n\n Please update your details on https://hr-onboarding-cli.herokuapp.com/"
             send_mail('[Important] Declined by Admin1', msg, '', [hi.email], fail_silently=False)
         return redirect('admin1')
 
@@ -354,12 +358,12 @@ class details2(AccessMixin, UpdateView, DetailView):
             msg2 = "Hello\n\nA new applicant has been approved by Admin2."
             for i in body:
                     msg2 = msg2+ i + ' '+ ':' + ' '+ body[i] + '\n'
-            msg2 = msg2+ "For more details please visit the website."
+            msg2 = msg2+ "For more details please visit the website https://hr-onboarding-cli.herokuapp.com/"
             msg = hi.fname + " " + hi.lname + " , your request has been approved by admin2 for further process."
             send_mail('[Important]'+ hi.fname+" "+hi.lname+'has been approved by Admin2', msg2, '', ['accept3iiitl@gmail.com'], fail_silently=False)
             send_mail('[Important] Approved by Admin2', msg, '', [hi.email], fail_silently=False)
         else:
-            msg = "Reason given by Admin2 for declining your request\n"+hi.comment2
+            msg = "Reason given by Admin2 for declining your request\n\n"+hi.comment2 + "\n\n Please update your details on https://hr-onboarding-cli.herokuapp.com/"
             send_mail('[Imortant] Declined by Admin2', msg, '', [hi.email], fail_silently=False)
         return redirect('admin2')
 
@@ -386,15 +390,16 @@ class details3(AccessMixin, UpdateView, DetailView):
 
     def form_valid(self, form):
         form.save()
+        x = employer.objects.values_list('email', flat = True)
         hi = self.get_object()
         if hi.status3 == True:
             msg1 = hi.fname + " " + hi.lname + ", your request has been approved by director.\nFurther proceedings will be informed to you by respective staff."
             send_mail('[Important] Approved by Director', msg1, '', [hi.email], fail_silently=False)
             msg2 = hi.fname + " " + hi.lname + " has been approved by Director. \nPlease contact this person as soon as possible for further proceedings.\n"
             msg2 = msg2 + "Name: " + hi.fname+ " " + hi.lname + "\nEmail: " + hi.email + "\nMobile: " + hi.mobile
-            send_mail('[Important] New person has been approved by Director', msg2, '', [''], fail_silently=False) 
+            send_mail('[Important] New person has been approved by Director', msg2, '', x, fail_silently=False)
         if hi.status3 == False:
-            msg = "Reason given by Director for declining your request\n"+ hi.comment3
+            msg = "Reason given by Director for declining your request\n\n"+ hi.comment3 + "\n\n Please update your details on https://hr-onboarding-cli.herokuapp.com/"
             send_mail('[Important] Declined by Director', msg, '', [hi.email], fail_silently=False)
         return redirect('director')
 

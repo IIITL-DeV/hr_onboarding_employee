@@ -11,6 +11,13 @@ def user_directory_path(instance, filename):
 
 class new(models.Model):
     BOOL_CHOICES = ((True, 'Approve'), (False, 'Decline'))
+    GENDER = (
+    (None, 'Gender'),
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+    ('Custom', 'Custom'),
+    ('Prefer Not To Say', 'Prefer Not To Say'),
+    )
     user = models.OneToOneField(User ,null = True, on_delete=models.CASCADE)
     fname = models.CharField(max_length=200, null=True)
     lname = models.CharField(max_length=200, null=True)
@@ -21,6 +28,7 @@ class new(models.Model):
     address = models.CharField(max_length=500, null = True)
     dob = models.DateField(("Date"), default=None, null = True)
     #dob1 = models.DateField(auto_now=False, auto_now_add=False)
+    gender1= models.CharField(max_length=50, choices=GENDER, verbose_name="gender", blank=True)
     gender = models.CharField(max_length=10, null = True)
     high = models.FileField(upload_to=user_directory_path, default= None, null = True)
     senior = models.FileField(upload_to=user_directory_path, default= None, null = True)
