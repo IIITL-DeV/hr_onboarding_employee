@@ -34,8 +34,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 120vh;
   margin: 1rem 0;
+  overflow: auto;
 }
 
 h1 {
@@ -385,7 +386,7 @@ input {
           {{form.password2}}
         
           <input type = "submit" name = "create user" class = "submitbtn">
-{{form.errors}}
+
         </form>
       </div>
       <div class="form-container sign-in-container">
@@ -395,13 +396,7 @@ input {
            <input type="text" name="username" placeholder="Username">
              <input type="text" name="email" placeholder="Email">
              <input type="password" name="password" placeholder="Password">
-             {% if messages %}
-<ul class="messages" style="list-style-type:none">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+            
           <a href = "{% url 'reset_password'%}">Forgot your password?</a>
 
           <input class="submitbtn" type="submit" name="login" />
@@ -422,6 +417,14 @@ input {
         </div>
       </div>
     </div>
+	  {{form.errors}}
+    {% if messages %}
+<ul class="messages" style="list-style-type:none">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 	<script>
 	const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
