@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "./css/admin.css" %}" type="text/css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-a11y="true"></script>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script type="text/javascript">
+        function preventBack() {
+            window.history.forward(); 
+        }
+          
+        setTimeout("preventBack()", 0);
+          
+        window.onunload = function () { null };
+    </script>
+    <script type="text/javascript">
+        window.onload = function() {
+            
+            let sidebar = document.querySelector(".sidebar");
+            let sidebarBtn = document.querySelector(".sidebarBtn");
+            sidebarBtn.onclick = function() {
+                sidebar.classList.toggle("active");
+                if(sidebar.classList.contains("active")){
+                    sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+                }else
+                    sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+
+        }
+    </script>
+</head>
+<body>
+
+
+<div class="sidebar">
+    <div class="logo-details">
+        <i class='bx bx-user-circle'></i>
+        <span class="logo_name">Director Portal</span>
+    </div>
+    <ul class="nav-links" id="nav">
+        <li>
+            <a href="{% url 'director'%}" class="active">
+                <i class='bx bx-list-ul' ></i>
+                <span class="links_name">Pending Requests</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'history3'%}" class="">
+                <i class='bx bx-time-five' ></i>
+                <span class="links_name">History</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'home'%}">
+                <i class='bx bx-home' ></i>
+                <span class="links_name">Home</span>
+            </a>
+        </li>
+        <li class="log_out">
+            <a href="{% url 'logout'%}">
+                <i class='bx bx-log-out'></i>
+                <span class="links_name">Log out</span>
+            </a>
+        </li>
+    </ul>
+    </div>
+</div>
+<section class="home-section">
+    <nav>
+        <div class="sidebar-button">
+            <i class='bx bx-menu sidebarBtn'></i>
+            <span class="dashboard">Dashboard</span>
+        </div>
+        <div class="profile-details">
+            <img src="{% static 'images/user.png'%}" alt="">
+            <span class="admin_name">{{request.user}}</span>
+            <i class='bx bx-chevron-down' ></i>
+    </nav>
+
+<div class="aka">
+              <br></br>
+              <br></br>
+              
+                <ul class="responsive-table">
+                  <li class="table-header">
+                    <div class="col col-1">Registration Id</div>
+                    <div class="col col-2">Employee Name</div>
+                    <div class="col col-3">Profile</div>
+                    
+                  </li>
+{% for new in news%}
+
+{% if new.status2 == True and new.status3 == None%}
+<li class="table-row">
+                    <div class="col col-1" data-label="Registration Id">{{new.rnumber}}</div>
+                    <div class="col col-2" data-label="Employee Name">{{new.fname}} {{new.lname}}</div>
+                    <div class="col col-3" data-label="Profile"><a href="{% url 'new3' new.id %}">View</a></div>
+                   
+                  </li>
+                  {% endif %}
+                {% endfor %}
+                </ul>
+              </div> 
+<script>
+$("a.link").click(function(){
+      $("a.link").css("background-color", "black");
+    $(this).css("background-color", "red");
+});
+</script>        
+</body>
+</html>
