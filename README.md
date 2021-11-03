@@ -8,3 +8,16 @@
 2. Automated Mail System.
 3. Dashboard for the new employees.
 ### heroku site for the same- (https://hr-onboarding-cli.herokuapp.com)
+#### setting up project for development:
+git clone: https://github.com/vidhi0206/hr_onboarding_employee.git
+cd hr_onboarding_employee
+python3 -m venv venv # Creating the virtual environment
+. venv/bin/activate # Activate the virtual environment
+pip install -r requirements.txt # Install the requirements
+python manage.py runserver # To run the development server 
+
+### members of the team:
+1. Apoorva | LCS2019018
+2. Akanksha | LCS2019019
+3. Vidhi Agarwal | LIT2019020
+4. Muskan Kumari | LIT2019030
