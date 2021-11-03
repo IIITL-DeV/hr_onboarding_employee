@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import new
+from .models import new, employer
 from django.urls import reverse
 from .forms import newForm, approval, CreateUserForm, approval2, approval3, update1
 from django.shortcuts import get_object_or_404
@@ -24,6 +24,7 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.template.loader import get_template
 import accounts
+
 
 # Create your views here.
 
@@ -53,6 +54,7 @@ def registerPage(request):
             username = form.cleaned_data.get('username')
             group = Group.objects.get(name = 'employee')
             user.groups.add(group)
+            
             return redirect('login')
 
     context = {'form':form}
@@ -85,7 +87,7 @@ def loginPage(request):
         else:
             messages.error(request, "Username, password or email is incorrect.")
             return redirect('register')
-
+                 
 
     context = {}
     return render(request, 'accounts/register.html', context)
@@ -125,7 +127,7 @@ def upload(request):
                 m = 'Hello\n\n A new employee has uploaded their document their information is below:\n\n'
                 #message = 'New user has been added\n'+'\n'.join(body.values())
                 for i in body:
-                    m = m+ i + ' '+ ':' + ' '+ body[i] + '\n'
+                    m = m + i + ' '+ ':' + ' '+ body[i] + '\n'
 
                 m = m+ "For more details please visit the website https://hr-onboarding-cli.herokuapp.com/"
                 send_mail(subject, m, '', ['accept1iiitl@gmail.com'], fail_silently=False)
@@ -133,8 +135,9 @@ def upload(request):
                 new.status1 = None
                 new.status2 = None
                 new.status3 = None
-                messages.success(request, 'You data has been stored succesfully.')
+                messages.success(request, 'You data has been stored successfully.')
                 return redirect('form_submitted')
+            
     context = {'form':form}
     return render(request, 'accounts/new_form.html', context)
 
@@ -155,13 +158,13 @@ def update(request, pk):
     form = update1(request.POST or None, request.FILES or None, instance = gh)
     if form.is_valid():
         if gh.status1 == False: 
-            msg = gh.fname + " "+ gh.lname+ " has updated their document on Admin1's given review.\n"+gh.comment1
+            msg = gh.fname + " "+ gh.lname+ " has updated their document on Admin1's given review.\n\n"+"Review: "+gh.comment1
 
         if gh.status2 == False:
-            msg = gh.fname + " "+ gh.lname+ " has updated their document on Admin2's given review.\n"+gh.comment2
+            msg = gh.fname + " "+ gh.lname+ " has updated their document on Admin2's given review.\n\n"+"Review: "+gh.comment2
 
         if gh.status3 == False:
-            msg = gh.fname + " "+ gh.lname+ " has updated their document on Director's given review.\n"+gh.comment3
+            msg = gh.fname + " "+ gh.lname+ " has updated their document on Director's given review.\n\n"+"Review: "+gh.comment3
         gh.status1 = None
         gh.status2 = None
         gh.status3 = None
@@ -387,17 +390,19 @@ class details3(AccessMixin, UpdateView, DetailView):
     model = new
     form_class = approval3
     success_url = reverse_lazy('director')
+    
+    
 
     def form_valid(self, form):
-        form.save()
         x = employer.objects.values_list('email', flat = True)
+        form.save()
         hi = self.get_object()
         if hi.status3 == True:
             msg1 = hi.fname + " " + hi.lname + ", your request has been approved by director.\nFurther proceedings will be informed to you by respective staff."
             send_mail('[Important] Approved by Director', msg1, '', [hi.email], fail_silently=False)
-            msg2 = hi.fname + " " + hi.lname + " has been approved by Director. \nPlease contact this person as soon as possible for further proceedings.\n"
+            msg2 = hi.fname + " " + hi.lname + " has been approved by Director. \n\nPlease contact this person as soon as possible for further proceedings of respected departments.\n"
             msg2 = msg2 + "Name: " + hi.fname+ " " + hi.lname + "\nEmail: " + hi.email + "\nMobile: " + hi.mobile
-            send_mail('[Important] New person has been approved by Director', msg2, '', x, fail_silently=False)
+            send_mail('[Important] New person has been approved by Director', msg2, '', x, fail_silently=False) 
         if hi.status3 == False:
             msg = "Reason given by Director for declining your request\n\n"+ hi.comment3 + "\n\n Please update your details on https://hr-onboarding-cli.herokuapp.com/"
             send_mail('[Important] Declined by Director', msg, '', [hi.email], fail_silently=False)

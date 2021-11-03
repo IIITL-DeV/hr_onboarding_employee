@@ -70,7 +70,7 @@
                                             {% endif %}
                                         {% endif %}
                                         {% if request.user|has_group:"admin1" %}
-                                            <a href="{% url 'approve_1'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
+                                            <a href="{% url 'admin1'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>
                                         {% endif %}
                                         {% if request.user|has_group:"admin2" %}
                                             <a href="{% url 'admin2'%}" class="custom-btn btn-bg btn mt-3" data-aos="fade-up" data-aos-delay="100">Let's get started!</a>

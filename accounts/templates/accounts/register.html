@@ -396,7 +396,7 @@ input {
            <input type="text" name="username" placeholder="Username">
              <input type="text" name="email" placeholder="Email">
              <input type="password" name="password" placeholder="Password">
-            
+
           <a href = "{% url 'reset_password'%}">Forgot your password?</a>
 
           <input class="submitbtn" type="submit" name="login" />
@@ -416,8 +416,9 @@ input {
           </div>
         </div>
       </div>
+      
     </div>
-	  {{form.errors}}
+    {{form.errors}}
     {% if messages %}
 <ul class="messages" style="list-style-type:none">
     {% for message in messages %}
@@ -426,6 +427,7 @@ input {
 </ul>
 {% endif %}
 	<script>
+  
 	const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
 const container = document.getElementById("container");
