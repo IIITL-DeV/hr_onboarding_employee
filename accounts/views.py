@@ -55,7 +55,7 @@ def registerPage(request):
             group = Group.objects.get(name = 'employee')
             user.groups.add(group)
             
-            return redirect('login')
+            return redirect('register')
 
     context = {'form':form}
     return render(request, 'accounts/register.html', context)
