@@ -36,7 +36,7 @@ class newForm(ModelForm):
             "fname": TextInput(attrs={"placeholder": "First name",}),
             "lname": TextInput(attrs={"placeholder": "Last name",}),
             #"dob": TextInput(attrs={"placeholder": "mm/dd/yyyy",}),
-            'gender': forms.Select(attrs={'class': 'custom-select md-form'}),
+            'gender1': forms.Select(attrs={'class': 'custom-select md-form'}),
             'dob': DateInput(),
         }
 
@@ -75,7 +75,7 @@ class approval3(ModelForm):
 class update1(ModelForm):
     class Meta:
         model = new
-        fields = ["fname", "address","lname", "email", "gender", "dob","aadharn", "rnumber", "pann","high","senior", "aadhar","pan","graduation","masters","phd" ,"college","mobile"]
+        fields = ["fname", "address","lname", "email", "gender1", "dob","aadharn", "rnumber", "pann","high","senior", "aadhar","pan","graduation","masters","phd" ,"college","mobile"]
         
     
 
