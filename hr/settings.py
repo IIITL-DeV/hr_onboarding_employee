@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-k$#yr*ic&lifp9o$ew@gd-1zqgjgn9igk6#9+3+fjy5aoef_f+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','hr-onboarding-cli.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','hr-onboarding-cli.herokuapp.com', 'hr-v.herokuapp.com']
 
 # Application definition
 
@@ -89,6 +89,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age = 600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -146,3 +149,4 @@ EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/pdfs')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
