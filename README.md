@@ -8,7 +8,7 @@
 2. Automated Mail System.
 3. Dashboard for the new employees.
 
-### Heroku deployment of our webapp: https://hr-onboarding-cli.herokuapp.com
+### Heroku deployment of our webapp:  https://hr-v.herokuapp.com
 ### Setting up the project for development:
 ``` batch
 git clone https://github.com/vidhi0206/hr_onboarding_employee.git
